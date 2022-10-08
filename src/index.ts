@@ -1,6 +1,10 @@
 import express from "express";
 import mongoose, { ConnectOptions } from "mongoose";
 import bodyParser from "body-parser";
+import AuthRouter from "./routes/auth";
+import router from "./routes/product";
+import campaignRouter from "./routes/campaign";
+import cors from "cors";
 
 const app = express();
 
@@ -22,8 +26,12 @@ mongoose.connect(
   }
 );
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use("/", AuthRouter);
+app.use("/", campaignRouter);
+app.use("/", router);
 
 app.get("/", (_req, res) => {
   res.end("Hello shubbi World!");

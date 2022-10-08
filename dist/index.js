@@ -6,6 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const auth_1 = __importDefault(require("./routes/auth"));
+const product_1 = __importDefault(require("./routes/product"));
+const campaign_1 = __importDefault(require("./routes/campaign"));
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const port = 8000;
 const DB_USER = process.env.DB_USER;
@@ -21,8 +25,12 @@ mongoose_1.default.connect(
         console.log("Database connected");
     }
 });
+app.use((0, cors_1.default)());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(body_parser_1.default.json());
+app.use("/", auth_1.default);
+app.use("/", campaign_1.default);
+app.use("/", product_1.default);
 app.get("/", (_req, res) => {
     res.end("Hello shubbi World!");
 });
