@@ -3,7 +3,6 @@ dotenv.config();
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { StatusCodes } from "http-status-codes";
 import httpError from "../../util/functions/httpError.js";
 import userModel from "../../models/user";
 import authModel from "../../models/auth";

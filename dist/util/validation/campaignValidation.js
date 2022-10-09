@@ -17,7 +17,6 @@ const createCampaignSchema = joi_1.default.object()
     location: joi_1.default.string().min(3).required(),
     platform: joi_1.default.string().min(1).required(),
     createdOn: joi_1.default.date().required(),
-    // createdBy: Joi.string().min(7).max(24).required(),
 })
     .unknown();
 const createCampaignValidation = ({ campaignName, isOn, startDate, endDate, clicks, budget, location, platform, createdOn, }) => {

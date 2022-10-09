@@ -1,5 +1,4 @@
 import Joi from "joi";
-import { platform } from "os";
 
 const createCampaignSchema = Joi.object()
   .options({ abortEarly: false })
@@ -13,7 +12,6 @@ const createCampaignSchema = Joi.object()
     location: Joi.string().min(3).required(),
     platform: Joi.string().min(1).required(),
     createdOn: Joi.date().required(),
-    // createdBy: Joi.string().min(7).max(24).required(),
   })
   .unknown();
 

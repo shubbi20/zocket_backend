@@ -6,7 +6,6 @@ import jwt from "jsonwebtoken";
 import httpError from "../../util/functions/httpError";
 import authModel from "../../models/auth.js";
 import { loginValidation } from "../../util/validation/authValidation.js";
-import { StatusCodes } from "http-status-codes";
 import userModel from "../../models/user";
 
 const JWT_KEY: any = process.env.JWT_KEY;

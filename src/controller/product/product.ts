@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import Joi from "joi";
 import productModel from "../../models/product";
 import userModel from "../../models/user";
 import { createProductValidation } from "../../util/validation/productValidation";

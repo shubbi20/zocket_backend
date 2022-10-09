@@ -62,7 +62,80 @@ class CampaignController {
                 if (!user) {
                     return res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).send();
                 }
-                const campaigns = await campaign_1.default.find();
+                console.log("query", req.query);
+                const { platform, tags, day } = req.query;
+                let d = new Date();
+                let dated = d.getTime() - 30 * 24 * 60 * 60 * 1000;
+                if (day !== "All") {
+                    dated = d.getTime() - parseInt(day) * 24 * 60 * 60 * 1000;
+                    console.log("dated", new Date(dated));
+                }
+                let campaigns = await campaign_1.default
+                    .aggregate()
+                    .match({
+                    $expr: {
+                        $eq: ["$createdBy", emailId],
+                    },
+                })
+                    .addFields({
+                    tagValue: {
+                        $cond: {
+                            if: { $lt: [d, "$startDate"] },
+                            then: {
+                                $cond: {
+                                    if: { $eq: ["$isOn", true] },
+                                    then: "Pending",
+                                    else: "Pending",
+                                },
+                            },
+                            else: {
+                                $cond: {
+                                    if: { $gte: [d, "$endDate"] },
+                                    then: "Exhausted",
+                                    else: {
+                                        $cond: {
+                                            if: { $eq: ["$isOn", false] },
+                                            then: "Paused",
+                                            else: "Live-Now",
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                })
+                    .match({
+                    $expr: {
+                        $cond: {
+                            if: { $ne: [platform, null] },
+                            then: { $eq: ["$platform", platform] },
+                            else: { $eq: ["$createdBy", emailId] },
+                        },
+                    },
+                })
+                    .match({
+                    $expr: {
+                        $cond: {
+                            if: { $ne: [tags, null] },
+                            then: { $eq: ["$tagValue", tags] },
+                            else: { $eq: ["$createdBy", emailId] },
+                        },
+                    },
+                })
+                    .addFields({
+                    datecomp: {
+                        $cond: {
+                            if: { $ne: [day, "All"] },
+                            then: { $cmp: ["$createdOn", new Date(dated)] },
+                            else: 1,
+                        },
+                    },
+                })
+                    .match({
+                    $expr: {
+                        $eq: ["$datecomp", 1],
+                    },
+                });
                 if (!campaigns) {
                     return res.status(400).send("error");
                 }

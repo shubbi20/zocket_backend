@@ -1,6 +1,4 @@
-import { Http2ServerResponse } from "http2";
 import Joi from "joi";
-import httpError from "../functions/httpError";
 
 const signupSchema = Joi.object()
   .options({ abortEarly: false })
